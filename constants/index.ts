@@ -1,0 +1,1 @@
+export const yadogBackendUrl: string = 'https://api.yadog.cc';
