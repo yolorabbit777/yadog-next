@@ -934,13 +934,13 @@ export interface ActivityRewardResponse {
 }
 
 // GetEventList
-export interface GetEventListRequest {
+export interface GetActivityEventListRequest {
     action: string;
     userid: string;
     token: string;
 }
 
-export interface GetEventListResponse {
+export interface GetActivityEventListResponse {
     ErrorCode: number;
     ErrorMsg: string;
 }

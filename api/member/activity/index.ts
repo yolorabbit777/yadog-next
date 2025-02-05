@@ -1,6 +1,6 @@
 import axios from "axios";
 import { yadogBackendUrl } from "@/constants";
-import { ActivityRewardRequest, ActivityRewardResponse, GetEventListRequest, GetEventListResponse, GetMissionListRequest, GetMissionListResponse,
+import { ActivityRewardRequest, ActivityRewardResponse, GetActivityEventListRequest, GetActivityEventListResponse, GetMissionListRequest, GetMissionListResponse,
     GetVipSignInInfoRequest, GetVipSignInInfoResponse, PlayRouletteRequest, PlayRouletteResponse, VipSignInRequest, VipSignInResponse
  } from "@/types";
 
@@ -24,16 +24,16 @@ export const activityReward = async (userid: string, token: string, act: number)
     }
 }
 
-export const getEventList = async (userid: string, token: string) : Promise<GetEventListResponse | null> => {
+export const getActivityEventList = async (userid: string, token: string) : Promise<GetActivityEventListResponse | null> => {
     try {
-        const requestBody: GetEventListRequest = {
-            action: 'GetEventList',
+        const requestBody: GetActivityEventListRequest = {
+            action: 'GetActivityEventList',
             userid: userid,
             token: token
         }
         const response = await axios.post(`${yadogBackendUrl}/api/mainApi`, requestBody);
         if (response.status === 200) {
-            return response.data as GetEventListResponse;
+            return response.data as GetActivityEventListResponse;
         }
         return null;
     }
