@@ -1,8 +1,17 @@
 'use client'; 
 
+import { useState } from "react";
 import Image from "next/image";
+import { verifyMsg } from "@/api/auth";
+import { useAppDispatch } from "@/redux/hooks";
+import { phoneLogin } from "@/redux/auth/authSlice";
 
 export default function SendCode({isActive, setActive} : {isActive:boolean, setActive: (status: boolean) => void}) {
+  const [phone, setPhone] = useState('')
+  const [realCode, setRealCode] = useState('')
+  const [code, setCode] = useState('')
+
+  const dispatch = useAppDispatch();
 
   const handleCancelSendCode = () => {
 
@@ -12,6 +21,32 @@ export default function SendCode({isActive, setActive} : {isActive:boolean, setA
 
   const handleConfirmSendCode = () => {
     setActive(false)
+
+    if (code === '') {
+      return
+    }
+    console.log(code, realCode)
+    if (code != realCode) {
+      console.log('驗證碼錯誤')
+      return
+    } else {
+      dispatch(phoneLogin({ phone: phone, code: code }))
+    }
+  }
+
+  const handleSendCode = async () => {
+    if (phone === '') {
+      return
+    }
+    const response = await verifyMsg(phone, 'forget');
+    if (response) {
+      if (response.ErrorCode === 0) {
+        setRealCode(response.data!.code)
+        console.log(response.data!.code)
+      } else {
+        console.log(response.ErrorMsg)
+      }
+    }
   }
 
   return (
@@ -27,12 +62,16 @@ export default function SendCode({isActive, setActive} : {isActive:boolean, setA
               <div className="flex flex-col justify-between items-center gap-[18px] border-[10px] border-[#DC9409] rounded-[50px] px-[42px] pb-[30px] pt-[72px] bg-gradient-to-b from-[#5B0B90] to-[#052657]">
                   <input 
                       placeholder="請輸入手機號碼" 
-                      className="w-full rounded-[10px] bg-[#F5EEDD] p-[13px] text-[15px] shadow-inner shadow-black outline-none" />
+                      className="w-full rounded-[10px] bg-[#F5EEDD] p-[13px] text-[15px] shadow-inner shadow-black outline-none text-black" 
+                      onChange={(e) => setPhone(e.target.value)}
+                  />
                   <div className="w-full flex flex-row justify-between gap-4">
                       <input
                         placeholder="請輸入驗證碼"
-                        className="w-[40%] rounded-[10px] bg-[#F5EEDD] p-[13px] text-[15px] shadow-inner shadow-black outline-none" />
-                      <button className="w-[60%] bg-gradient-to-b from-[#FF6365] to-[#CB1162] px-3 py-2 border-[2px] border-white rounded-[30px] outline-none">
+                        className="w-[40%] rounded-[10px] bg-[#F5EEDD] p-[13px] text-[15px] shadow-inner shadow-black outline-none text-black" 
+                        onChange={(e) => setCode(e.target.value)}
+                      />
+                      <button className="w-[60%] bg-gradient-to-b from-[#FF6365] to-[#CB1162] px-3 py-2 border-[2px] border-white rounded-[30px] outline-none" onClick={handleSendCode}>
                           <span className="text-[15px] text-white font-medium">發送手機簡訊驗證碼</span>
                       </button>
                   </div>

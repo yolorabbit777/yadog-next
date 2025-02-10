@@ -91,7 +91,7 @@ export const verifyMsg = async (phone: string, type: string): Promise<VerifyMsgR
             phone: phone,
             type: type
         }
-        const response = await axios.post(`${yadogBackendUrl}/api/send/verifyMsg`, requestBody);
+        const response = await axios.post(`${yadogBackendUrl}/api/auth/send/verifyMsg`, requestBody);
         if (response.status === 200) {
             return response.data as VerifyMsgResponse;
         }

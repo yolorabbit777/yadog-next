@@ -2,15 +2,34 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { login } from "@/api/auth";
+import { useAppSelector, useAppDispatch, useAppStore } from "@/redux/hooks";
+import { login as authLogin } from "@/redux/auth/authSlice";
 
 export default function AccountLogin({isActive, setActive} : {isActive:boolean, setActive: (status: boolean) => void}) {
 
-  const handleEnterAccount = () => {
-    console.log(isActive)
+  const [account, setAccount] = useState('')
+  const [password, setPassword] = useState('')
+  const [isPasswordShow, setPasswordShow] = useState(false)
+
+  const dispatch = useAppDispatch();
+
+  const handleEnterAccount = async () => {
+    if (account === '' || password === '') {
+      return
+    }
+    const response = await login(0, account, password)
+    if (response) {
+      if (response.ErrorCode === 0) {
+        dispatch(authLogin(response))
+      } else {
+        console.log(response?.ErrorMsg);
+      }
+    } else {
+      console.log('登入失敗')
+    }
     setActive(false)
   }
-
-  const [isPasswordShow, setPasswordShow] = useState(false)
 
   return (
     <div className=" z-[1000] absolute w-full h-full flex flex-col items-center">
@@ -29,6 +48,7 @@ export default function AccountLogin({isActive, setActive} : {isActive:boolean, 
                     <input
                         placeholder="請輸入帳號"
                         className="w-full shadow-inner shadow-black bg-[#F9F0E0] rounded-[10px] text-[#523705] outline-none text-[13px] font-medium p-3"
+                        onChange={(e) => setAccount(e.target.value)}
                     />
                   </div>
                   <div className="flex w-full flex-col items-start gap-1">
@@ -38,6 +58,7 @@ export default function AccountLogin({isActive, setActive} : {isActive:boolean, 
                             placeholder="請輸入密碼"
                             type={`${isPasswordShow? "text" : "password"}`}
                             className="w-full font-black shadow-inner shadow-black bg-[#F9F0E0] rounded-[10px] text-[#523705] outline-none text-[13px] font-medium p-3"
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                         { 
                             isPasswordShow ? 

@@ -1,5 +1,7 @@
 'use client';
-import { use, useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
+import { useAppSelector } from "@/redux/hooks";
 import LobbyHeader from "./lobbyHeader";
 import LobbyNavigation from "./lobbyNavigation";
 import LobbyContent from "./lobbyContent";
@@ -18,6 +20,8 @@ import GiftModal from "./modal/giftModal";
 
 export default function Home() {
 
+  const { isLoggedIn } = useAppSelector((state) => state.auth);
+  const router = useRouter();
   const [ activeIndex, setActiveIndex] = useState(0)
 
   const [rankingModalShow, setRankingModalShow] = useState(false)
@@ -29,6 +33,12 @@ export default function Home() {
   const [bankTransferModalShow, setBankTransferModalShow] = useState(false)
   const [creditCardModalShow, setCreditCardModalShow] = useState(false)
   const [giftModalShow, setGiftModalShow] = useState(true)
+
+  useEffect(() => {
+      if (!isLoggedIn) {
+        router.replace('/login');  // Redirect to lobby if logged in
+      }
+  }, [isLoggedIn, router]);
 
   return (
     <div className="bg-black h-screen flex flex-col items-center">

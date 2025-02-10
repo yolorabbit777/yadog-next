@@ -1,9 +1,20 @@
+'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAppSelector } from '@/redux/hooks';
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      
-    </div>
-  );
+export default function HomePage() {
+  const router = useRouter();
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.replace('/lobby');
+    } else {
+      router.replace('/login');
+    }
+  }, [isLoggedIn, router]);
+
+  return null; // or loading spinner
 }

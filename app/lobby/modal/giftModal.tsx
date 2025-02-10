@@ -1,12 +1,26 @@
 import Image from "next/image";
 import DateNavigationItem from "@/components/chatRoom/dateNavigationItem";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAppSelector } from "@/redux/hooks";
+import { UserData } from "@/types";
 
 const dataList=["贈禮", "贈禮中心", "贈禮紀錄"]
 
 export default function GiftModal({setGiftModalShow}: {setGiftModalShow:(status: boolean) => void}) {
-
+    const { loginInfo } = useAppSelector((state) => state.auth);
     const [activeDateIndex, setActiveDateIndex] = useState(0)
+    const [userName, setUserName] = useState('');
+    const [nickName, setNickName] = useState('');
+    const [score, setScore] = useState(0);
+
+    useEffect(() => {
+        if (loginInfo && loginInfo.userData) {
+            const userData = loginInfo.userData as UserData;
+            setUserName(userData.username);
+            setNickName(userData.nickname);
+            setScore(userData.score);
+        }
+    }, [loginInfo])
 
     return (
         <div className="fixed inset-0 flex justify-center items-center top-0 left-0 z-[600] h-full ">
@@ -28,16 +42,16 @@ export default function GiftModal({setGiftModalShow}: {setGiftModalShow:(status:
                                 <Image src="/images/guild/icon@3x.png" alt="activity" className="" width={110} height={110} />
                                 <div className="w-full flex flex-col justify-between">
                                     <div className="w-full flex justify-between items-center">
-                                        <p className="text-[#ED830A] text-[15px] font-bold">暱稱</p>
+                                        <p className="text-[#ED830A] text-[15px] font-bold">{nickName}</p>
                                         <button className="border-[2px] border-white rounded-full bg-gradient-to-b from-[#73FAFF] to-[#08219E] py-1 px-3 flex items-center gap-1">
                                             <Image src="/images/lobby/exclaim.png" alt="activity" className="" width={19} height={19} />
                                             <p className="text-[14px] text-white text-stroke-wheet">贈禮說明</p>
                                         </button>
                                     </div>
-                                    <p className="text-[20px] text-[#523705] font-bold">好玩一直玩</p>
+                                    <p className="text-[20px] text-[#523705] font-bold">{userName}</p>
                                     <div className="flex items-center gap-1">
                                         <Image src="/images/guild/footprinter@3x.png" alt="activity" className="" width={36} height={36} />
-                                        <p className="text-[#F3B50A] text-[17px] font-black">211,803,456 點</p>
+                                        <p className="text-[#F3B50A] text-[17px] font-black">{score.toLocaleString()} 點</p>
                                     </div>
                                 </div>
                             </div>

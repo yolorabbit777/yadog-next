@@ -1,11 +1,21 @@
 'use client'; 
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SendCode from "./modal/sendCode";
 import AccountLogin from "./modal/AccountLogin";
+import { useRouter } from 'next/navigation';
+import { useAppSelector } from '@/redux/hooks';
 
 export default function Home() {
+  const router = useRouter();
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.replace('/lobby');  // Redirect to lobby if logged in
+    }
+  }, [isLoggedIn, router]);
 
   const [isSendCodeActive, setSendCodeActive] = useState(false)
   const [isAccountLoginActive, setAccountLoginActive] = useState(false)

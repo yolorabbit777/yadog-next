@@ -933,7 +933,7 @@ export interface ActivityRewardResponse {
     ErrorMsg: string;
 }
 
-// GetEventList
+// GetActivityEventList
 export interface GetActivityEventListRequest {
     action: string;
     userid: string;
